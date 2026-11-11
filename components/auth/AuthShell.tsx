@@ -3,8 +3,6 @@ import { Check } from "lucide-react";
 import type { ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 
-// Shared split layout for login / signup / admin-login pages.
-
 interface AuthShellProps {
   badge: string;
   BadgeIcon: LucideIcon;
@@ -56,4 +54,5 @@ export default function AuthShell({
     </div>
   );
 }
+
 
