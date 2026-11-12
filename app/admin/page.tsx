@@ -6,8 +6,9 @@ import { useStore } from "@/context/StoreContext";
 import ProductManager from "@/components/admin/ProductManager";
 import ProjectManager from "@/components/admin/ProjectManager";
 import OrdersBookings from "@/components/admin/OrdersBookings";
+import AdvertisementManager from "@/components/admin/AdvertisementManager";
 
-const TABS = ["Products", "Projects", "Orders & Bookings"] as const;
+const TABS = ["Products", "Projects", "Advertisements", "Orders & Bookings"] as const;
 
 export default function Admin() {
   const { isAdmin, authReady, adminLogout } = useStore();
@@ -26,6 +27,7 @@ export default function Admin() {
       {tab === "Products" && <ProductManager />}
       {tab === "Projects" && <ProjectManager />}
       {tab === "Orders & Bookings" && <OrdersBookings />}
+      {tab === "Advertisements" && <AdvertisementManager />}
     </div>
   );
 }

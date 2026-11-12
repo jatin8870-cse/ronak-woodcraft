@@ -6,6 +6,7 @@ import ServiceIcon from "@/components/ServiceIcon";
 import { SERVICES, BRAND } from "@/lib/data";
 import FeaturedProducts from "@/components/FeaturedProducts";
 import FeaturedProjects from "@/components/FeaturedProjects";
+import FeaturedAdvertisements from "@/components/FeaturedAdvertisements";
 
 const STEPS = [
   { t: "Choose a service or product", d: "Buy furniture or book a carpenter / custom job." },
@@ -53,7 +54,8 @@ const CATS = [
 export default function Home() {
   return (
     <>
-      <Hero />
+      {/* <Hero /> */}
+      <FeaturedAdvertisements />
 
       <section className="wrap" style={{ paddingBottom: 8 }}>
         <div className="trust">
@@ -87,7 +89,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="wrap section" id="services">
+      {/* <section className="wrap section" id="services">
         <div className="sec-head"><h2>Available services</h2><span className="muted">Free site visit</span></div>
         <div className="svc-grid">
           {SERVICES.map((s) => (
@@ -96,7 +98,7 @@ export default function Home() {
             </Link>
           ))}
         </div>
-      </section>
+      </section> */}
 
       <section className="wrap section">
         <div className="sec-head"><h2>Popular furniture</h2><Link href="/shop" className="more">See all →</Link></div>
@@ -115,10 +117,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="wrap section">
+      {/* <section className="wrap section">
         <div className="sec-head"><h2>Our work</h2><Link href="/projects" className="more">All projects →</Link></div>
         <FeaturedProjects />
-      </section>
+      </section> */}
 
       <section className="wrap section">
         <div className="stats-band">

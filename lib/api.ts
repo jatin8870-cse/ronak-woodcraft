@@ -55,3 +55,24 @@ export function rateLimit(key: string, max = 5, windowMs = 15 * 60_000) {
     reset: () => attempts.delete(key),
   };
 }
+
+
+export const advertisementSchema = z.object({
+  title: z.string().trim().min(1, "Enter advertisement title").max(120),
+  tag: z.string().trim().max(40).default("Special Offer"),
+  description: z.string().trim().min(1, "Enter description").max(500),
+  image: z.string().min(1, "Upload a banner image").max(2_500_000),
+  buttonText: z.string().trim().min(1).max(40).default("Shop Now"),
+  buttonLink: z.string().trim().min(1).max(300).default("/shop"),
+  couponCode: z.string().trim().max(40).nullish(),
+  discount: z.number().int().min(0).max(100).default(0),
+  active: z.boolean().default(true),
+  sortOrder: z.number().int().min(0).default(0),
+  startDate: z.string().datetime().nullish(),
+  endDate: z.string().datetime().nullish(),
+}).refine(
+  (data) => !data.startDate || !data.endDate ||
+    new Date(data.startDate) <= new Date(data.endDate),
+  { message: "End date must be after start date", path: ["endDate"] }
+);
+
