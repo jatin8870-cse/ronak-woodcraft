@@ -1,6 +1,4 @@
-
 "use client";
-
 import {
   createContext,
   useContext,
@@ -9,7 +7,6 @@ import {
   useCallback,
   type ReactNode,
 } from "react";
-
 import type { Product, Project } from "@/lib/data";
 import { api } from "@/lib/client";
 
@@ -95,6 +92,12 @@ export type NewBooking = {
 
 export type ProductInput = Omit<Product, "id">;
 export type ProjectInput = Omit<Project, "id">;
+
+type ProductPageResponse = {
+  items: Product[];
+  nextCursor: string | null;
+  hasMore: boolean;
+};
 
 export type Advertisement = {
   id: string;
@@ -274,14 +277,36 @@ export function StoreProvider({
   ]);
 
   // Load products, projects and advertisements
+  // useEffect(() => {
+  //   Promise.all([
+  //     api<Product[]>("/api/products"),
+  //     api<Project[]>("/api/projects"),
+  //     api<Advertisement[]>("/api/advertisements"),
+  //   ])
+  //     .then(([productData, projectData, advertisementData]) => {
+  //       setProducts(productData);
+  //       setProjects(projectData);
+  //       setAdvertisements(advertisementData);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Catalog loading error:", error);
+  //     })
+  //     .finally(() => {
+  //       setCatalogReady(true);
+  //     });
+  // }, []);
+
+
+
+  // Load first page of products, projects and advertisements
   useEffect(() => {
     Promise.all([
-      api<Product[]>("/api/products"),
+      api<ProductPageResponse>("/api/products/page?limit=24"),
       api<Project[]>("/api/projects"),
       api<Advertisement[]>("/api/advertisements"),
     ])
       .then(([productData, projectData, advertisementData]) => {
-        setProducts(productData);
+        setProducts(productData.items);
         setProjects(projectData);
         setAdvertisements(advertisementData);
       })
@@ -292,6 +317,7 @@ export function StoreProvider({
         setCatalogReady(true);
       });
   }, []);
+
 
   // Sync profile with logged-in user
   useEffect(() => {
@@ -358,6 +384,7 @@ export function StoreProvider({
     setCart([]);
   }, []);
 
+  
   // Place order
   const placeOrder = useCallback(
     async (data: NewOrder) => {
@@ -376,14 +403,16 @@ export function StoreProvider({
 
       setCart([]);
 
-      api<Product[]>("/api/products")
-        .then(setProducts)
+      // Refresh only the first 24 products
+      api<ProductPageResponse>("/api/products/page?limit=24")
+        .then((data) => setProducts(data.items))
         .catch(() => {});
 
       return order;
     },
     [cart]
   );
+
 
   // Create booking
   const createBooking = useCallback(

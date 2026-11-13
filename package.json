@@ -17,6 +17,7 @@
     "next": "15.5.28",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-virtuoso": "^4.18.22",
     "zod": "^3.23.8"
   },
   "devDependencies": {
@@ -31,4 +32,3 @@
     "seed": "tsx prisma/seed.ts"
   }
 }
- 

@@ -9,8 +9,38 @@ export default function ProductArt({ p, size = 44 }: { p: Pick<Product, "categor
   const img = p.images?.[0];
   return (
     <div className="grain" style={{ ["--h" as any]: p.hue, width: "100%", height: "100%" }}>
-      {img ? <img src={img} alt={p.name} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} /> : <Icon size={size} strokeWidth={1.4} />}
-      {p.tag && <span className="tag">{p.tag}</span>}
+      {img ? (
+  <img
+    src={img}
+    alt={p.name}
+    onError={(e) => {
+      e.currentTarget.style.display = "none";
+      const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+      if (fallback) fallback.style.display = "flex";
+    }}
+    style={{
+      position: "absolute",
+      inset: 0,
+      width: "100%",
+      height: "100%",
+      objectFit: "cover",
+    }}
+  />
+) : null}
+
+<div
+  style={{
+    display: img ? "none" : "flex",
+    position: "absolute",
+    inset: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    color: "#9ca3af",
+    background: "#f3f4f6",
+  }}
+>
+  <Icon size={size} strokeWidth={1.4} />
+</div>
     </div>
   );
 }
