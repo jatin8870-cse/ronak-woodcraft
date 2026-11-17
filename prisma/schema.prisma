@@ -1,0 +1,168 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  phone        String
+  passwordHash String?
+  clerkId      String?   @unique
+  createdAt    DateTime  @default(now())
+  orders       Order[]
+  reviews      ProductReview[]
+  bookings     Booking[]
+}
+
+model Product {
+  id        String      @id @default(cuid())
+  name      String
+  category  String
+  price     Int
+  mrp       Int
+  rating    Float       @default(4.5)
+  tag       String?
+  hue       Int         @default(24)
+  desc      String      @default("")
+  images    String[]
+  videos    String[]      @default([])
+  reviews   ProductReview[]
+  stock     Int         @default(0)
+  createdAt DateTime    @default(now())
+  items     OrderItem[]
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  title       String
+  category    String
+  location    String
+  year        Int
+  description String
+  images      String[]
+  hue         Int      @default(24)
+  featured    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
+
+model Order {
+  id        String      @id @default(cuid())
+  code      String      @unique
+  name      String
+  phone     String
+  address   String
+  payment   String
+  status    String      @default("Placed")
+  subtotal  Int
+  discount  Int
+  delivery  Int
+  total     Int
+  coupon    String?
+  paymentStatus String @default("Pending")
+  razorpayOrderId String? @unique
+  razorpayPaymentId String? @unique
+  userId    String?
+  user      User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt DateTime    @default(now())
+  items     OrderItem[]
+
+  @@index([phone])
+  @@index([userId])
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  name      String
+  price     Int
+  qty       Int
+}
+
+model Booking {
+  id        String   @id @default(cuid())
+  code      String   @unique
+  service   String
+  date      String
+  slot      String
+  name      String
+  phone     String
+  address   String
+  notes     String   @default("")
+  status    String   @default("Confirmed")
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
+
+  @@index([phone])
+  @@index([userId])
+}
+
+model Coupon {
+  code    String  @id
+  percent Int
+  active  Boolean @default(true)
+}
+
+model Advertisement {
+  id          String    @id @default(cuid())
+  title       String
+  tag         String    @default("Special Offer")
+  description String
+  image       String
+  buttonText  String    @default("Shop Now")
+  buttonLink  String    @default("/shop")
+  couponCode  String?
+  discount    Int       @default(0)
+  active      Boolean   @default(true)
+  sortOrder   Int       @default(0)
+  startDate   DateTime?
+  endDate     DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([active, sortOrder])
+}
+
+
+model ProductReview {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rating    Int
+  title     String   @default("")
+  comment   String   @db.VarChar(1500)
+  images    String[] @default([])
+  videos    String[] @default([])
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@unique([productId, userId])
+  @@index([productId, approved, createdAt])
+}
+
+
+model PaymentAttempt {
+  id             String   @id @default(cuid())
+  razorpayOrderId String  @unique
+  amount         Int
+  currency       String   @default("INR")
+  payload        Json
+  userId         String?
+  status         String   @default("Created")
+  orderCode      String?  @unique
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([status, createdAt])
+}
