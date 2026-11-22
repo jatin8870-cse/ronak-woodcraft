@@ -76,7 +76,7 @@ export default function Header() {
             </div>
           </div>
 
-          <div className="category-row">
+          {/* <div className="category-row">
             <nav className="category-nav" aria-label="Product categories">
               {CATEGORIES.map((category) => (
                 <div className="category-item" key={category} onMouseEnter={() => setActiveCategory(category)} onMouseLeave={() => setActiveCategory(null)}>
@@ -90,7 +90,7 @@ export default function Header() {
                   </Link>
                   {activeCategory === category && (
                     <div className="category-mega">
-                      <div className="mega-heading">Explore {category}</div>
+                      <div className="mega-heading">Explore {}</div>
                       <Link href={`/shop?category=${encodeURIComponent(category)}`} className="mega-all">Shop all {category}</Link>
                       <div className="mega-products">
                         <span>Popular in {category}</span>
@@ -115,8 +115,8 @@ export default function Header() {
                   <button className="btn sm" onClick={() => { if (draft.trim()) setAddress(draft.trim()); setOpen(false); }}>Save address</button>
                 </div>
               )}
-            </div>
-          </div>
+            </div> */}
+          {/* </div> */}
         </div>
       </header>
     </>
